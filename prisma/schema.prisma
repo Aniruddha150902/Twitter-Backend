@@ -12,14 +12,26 @@ datasource db {
 model User{
   id Int @id @default(autoincrement())
   email String @unique
-  name String
-  username String @unique
+  name String?
+  username String? @unique
   image String?
   bio String?
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  token Token[]
   tweet Tweet[]
+}
+model Token{
+  id Int @id @default(autoincrement())
+  type String //EMAIL | API
+  emailToken String? @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  valid Boolean @default(true)
+  expired DateTime
+  userID Int
+  user User @relation(fields: [userID],references: [id])
 }
 model Tweet{
   id Int @id @default(autoincrement())
