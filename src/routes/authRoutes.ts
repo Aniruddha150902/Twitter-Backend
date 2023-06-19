@@ -9,8 +9,8 @@ const JWT_TOKEN = "SUPER SECRET";
 function generateEmialToken() {
   return Math.floor(10000000 + Math.random() * 90000000).toString();
 }
-function generateApiToken(tokenId: Number) {
-  const TokenId = tokenId.toString();
+function generateApiToken(tokenId: number): string {
+  const TokenId = tokenId;
   const jwtPayload = { TokenId };
   return jwt.sign(jwtPayload, JWT_TOKEN, {
     algorithm: "HS256",

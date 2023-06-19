@@ -2,18 +2,22 @@ import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
+// create tweet
 router.post("/", async (req, res) => {
-  const { content, userId } = req.body;
+  const { content, image } = req.body;
+  //@ts-ignore
+  const user = req.user;
   try {
     const result = await prisma.tweet.create({
       data: {
         content,
-        userId,
+        image,
+        userId: user.id,
       },
     });
     res.json(result);
   } catch (e) {
-    res.status(400).json({ error: "No user with the id : " + userId });
+    res.status(400).json({ error: "No user with the given id" });
   }
 });
 router.get("/", async (req, res) => {
