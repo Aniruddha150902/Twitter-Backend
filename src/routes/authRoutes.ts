@@ -5,14 +5,14 @@ const router = Router();
 const prisma = new PrismaClient();
 const EMAIL_TOKEN_EXPIRATION_MINUTES = 10;
 const AUTHENTICATION_EXPIRATION_HOURS = 12;
-const JWT_TOKEN = "SUPER SECRET";
+const JWT_SECRET = process.env.JWT_SECRET || "SUPER SECRET";
 function generateEmialToken() {
   return Math.floor(10000000 + Math.random() * 90000000).toString();
 }
 function generateApiToken(tokenId: number): string {
   const TokenId = tokenId;
   const jwtPayload = { TokenId };
-  return jwt.sign(jwtPayload, JWT_TOKEN, {
+  return jwt.sign(jwtPayload, JWT_SECRET, {
     algorithm: "HS256",
     noTimestamp: true,
   });

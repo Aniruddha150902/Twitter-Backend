@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient, User } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { type } from "os";
 const prisma = new PrismaClient();
-const JWT_TOKEN = "SUPER SECRET";
+const JWT_SECRET = process.env.JWT_SECRET || "SUPER SECRET";
+console.log(JWT_SECRET);
 type authRequest = Request & { user?: User };
 const authenticationLayer = async (
   req: authRequest,
@@ -14,7 +14,7 @@ const authenticationLayer = async (
   const jwtAuthCode = authCode?.split(" ")[1];
   if (!jwtAuthCode) res.sendStatus(400);
   try {
-    const jwtPayload = jwt.verify(jwtAuthCode as string, JWT_TOKEN) as {
+    const jwtPayload = jwt.verify(jwtAuthCode as string, JWT_SECRET) as {
       TokenId: number;
     };
     const dbToken = await prisma.token.findUnique({
