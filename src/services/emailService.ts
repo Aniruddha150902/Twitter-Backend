@@ -1,6 +1,8 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { error } from "console";
 // require("dotenv").config();
-const ses = new SESClient({});
+// console.log(process.env.AWS_ACCESS_KEY_ID);
+const ses = new SESClient({ region: "eu-north-1" });
 function SendEmailCommandFunc(
   souceEmail: string,
   destEmail: string,
@@ -14,7 +16,7 @@ function SendEmailCommandFunc(
     Message: {
       Subject: {
         Charset: "UTF-8",
-        Data: "OTP for your Login",
+        Data: "Twitter Clone Login OTP",
       },
       Body: {
         Text: {
@@ -33,10 +35,10 @@ export async function sendEmailToken(email: string, token: string) {
     message
   );
   try {
-    ses.send(command);
+    return await ses.send(command);
   } catch (e) {
     console.log("error while sending the email: " + e);
-    return e;
+    return error;
   }
 }
-// sendEmailToken("sin@eun.ocm", "8239ue");
+// sendEmailToken("1rn20cs021.aniruddha@gmail.com", "89293829");

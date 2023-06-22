@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
       },
     });
     console.log(createdToken);
-    // await sendEmailToken(email, emailToken);
+    await sendEmailToken(email, emailToken);
     res.sendStatus(200);
   } catch (e) {
     console.log(e);
