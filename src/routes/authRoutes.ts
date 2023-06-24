@@ -5,7 +5,7 @@ import { sendEmailToken } from "../services/emailService";
 const router = Router();
 const prisma = new PrismaClient();
 const EMAIL_TOKEN_EXPIRATION_MINUTES = 10;
-const AUTHENTICATION_EXPIRATION_HOURS = 12;
+const AUTHENTICATION_EXPIRATION_HOURS = 24;
 const JWT_SECRET = process.env.JWT_SECRET || "SUPER SECRET";
 function generateEmialToken() {
   return Math.floor(10000000 + Math.random() * 90000000).toString();
@@ -60,12 +60,12 @@ router.post("/authentication", async (req, res) => {
       user: true,
     },
   });
-  if (!dbEmailToken || !dbEmailToken.valid) res.sendStatus(401);
+  if (!dbEmailToken || !dbEmailToken.valid) return res.sendStatus(401);
   if (!dbEmailToken || dbEmailToken.expired < new Date())
-    res.status(401).json({ error: "Token Expired" });
-  if (dbEmailToken?.user.email != email) res.sendStatus(401);
+    return res.status(401).json({ error: "Token Expired" });
+  if (dbEmailToken?.user.email != email) return res.sendStatus(401);
   const expired = new Date(
-    new Date().getTime() + AUTHENTICATION_EXPIRATION_HOURS * 60 * 60 * 1000
+    new Date().getTime() + 5 * AUTHENTICATION_EXPIRATION_HOURS * 60 * 60 * 1000
   );
   const apiToken = await prisma.token.create({
     data: {

@@ -11,8 +11,8 @@ const authenticationLayer = async (
   next: NextFunction
 ) => {
   const authCode = req.headers.authorization;
+  if (!authCode) return res.sendStatus(401);
   const jwtAuthCode = authCode?.split(" ")[1];
-  if (!jwtAuthCode) res.sendStatus(400);
   try {
     const jwtPayload = jwt.verify(jwtAuthCode as string, JWT_SECRET) as {
       TokenId: number;
@@ -26,11 +26,11 @@ const authenticationLayer = async (
       },
     });
     if (!dbToken || !dbToken.valid || dbToken.expired < new Date())
-      res.status(400).json({ error: "Authenticaton Token Expired!" });
+      return res.status(400).json({ error: "Authenticaton Token Expired!" });
     req.user = dbToken?.user;
   } catch (e) {
     console.error(e);
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
   next();
 };
