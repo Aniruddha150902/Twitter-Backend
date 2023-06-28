@@ -88,6 +88,6 @@ router.post("/authentication", async (req, res) => {
   });
   const authcode = generateApiToken(apiToken.id);
   console.log(authcode);
-  res.json({ authcode });
+  res.status(200).json({ authcode });
 });
 export default router;

@@ -14,12 +14,16 @@ router.post("/", async (req, res) => {
         image,
         userId: user.id,
       },
+      include: {
+        user: true,
+      },
     });
     res.json(result);
   } catch (e) {
     res.status(400).json({ error: "No user with the given id" });
   }
 });
+// get list of tweets
 router.get("/", async (req, res) => {
   const allTweets = await prisma.tweet.findMany({
     include: {
@@ -27,6 +31,7 @@ router.get("/", async (req, res) => {
         select: {
           id: true,
           name: true,
+          username: true,
           image: true,
         },
       },
@@ -34,6 +39,7 @@ router.get("/", async (req, res) => {
   });
   res.json(allTweets);
 });
+// get a tweet
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const tweet = await prisma.tweet.findUnique({
@@ -41,8 +47,11 @@ router.get("/:id", async (req, res) => {
     include: { user: true },
   });
   if (!tweet) return res.status(404).json({ error: "tweet not found" });
+  // setTimeout(() => res.json(tweet), 2000);
+  // console.log("fetching the tweet:" + id);
   res.json(tweet);
 });
+// update the tweet
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { content, image } = req.body;
@@ -61,6 +70,7 @@ router.put("/:id", async (req, res) => {
     res.status(400).json({ error: "could not update the tweet" });
   }
 });
+// delete the tweet
 router.post("/:id", async (req, res) => {
   try {
     const { id } = req.params;
