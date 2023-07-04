@@ -18,6 +18,23 @@ function generateApiToken(tokenId: number): string {
     noTimestamp: true,
   });
 }
+// create user
+router.post("/create", async (req, res) => {
+  const { email, name, username, bio } = req.body;
+  try {
+    const result = await prisma.user.create({
+      data: {
+        email,
+        name,
+        username,
+        bio,
+      },
+    });
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: "Wrong Input Data" });
+  }
+});
 router.post("/login", async (req, res) => {
   const { email } = req.body;
   const emailToken = generateEmialToken();
@@ -31,25 +48,18 @@ router.post("/login", async (req, res) => {
         emailToken,
         expired,
         user: {
-          connectOrCreate: {
-            where: {
-              email,
-            },
-            create: {
-              email,
-            },
+          connect: {
+            email,
           },
         },
       },
     });
     console.log(createdToken);
     await sendEmailToken(email, emailToken);
-    res.sendStatus(200);
+    return res.sendStatus(200);
   } catch (e) {
     console.log(e);
-    res
-      .status(400)
-      .json({ error: "Couldn't Start the Authentication Process." });
+    return res.status(400).json({ error: "Please Create an Account" });
   }
 });
 router.post("/authentication", async (req, res) => {
@@ -88,6 +98,6 @@ router.post("/authentication", async (req, res) => {
   });
   const authcode = generateApiToken(apiToken.id);
   console.log(authcode);
-  res.status(200).json({ authcode });
+  return res.status(200).json({ authcode });
 });
 export default router;

@@ -16,11 +16,11 @@ router.post("/", async (req, res) => {
     });
     res.json(result);
   } catch (e) {
-    res.status(400).json({ error: "username and email should be unique" });
+    res.status(400).json({ error: "Wrong Input Data" });
   }
 });
 // list all users
-router.get("/", async (req, res) => {
+router.get("/list", async (req, res) => {
   const allUsers = await prisma.user.findMany();
   res.json(allUsers);
 });
@@ -30,12 +30,32 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const user = await prisma.user.findUnique({
     where: { id: Number(id) },
-    include: { tweet: true },
+    include: {
+      tweet: {
+        select: {
+          id: true,
+          content: true,
+          image: true,
+          createdAt: true,
+          updatedAt: true,
+          impression: true,
+          userId: true,
+          user: true,
+        },
+      },
+    },
   });
   if (!user)
     return res.status(404).json({ error: "No user with the id : " + id });
   res.json(user);
 });
+
+router.get("/", async (req, res) => {
+  const user = req.body;
+  // console.log(user);
+  return res.json(user);
+});
+
 // update user
 router.put("/:id", async (req, res) => {
   const { id } = req.params;

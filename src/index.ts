@@ -9,7 +9,7 @@ app.use("/user", authenticationLayer, userRoutes);
 app.use("/auth", authRoutes);
 app.use("/tweet", authenticationLayer, tweetRoutes);
 app.get("/", (req, res) => {
-  res.send("<h1>Hello World! updated</h1>");
+  res.send("<h1>TWITTER CLONE</h1>");
 });
 app.listen(3000, () => {
   console.log("server started on localhost");

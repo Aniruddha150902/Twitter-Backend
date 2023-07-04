@@ -42,14 +42,17 @@ router.get("/", async (req, res) => {
 // get a tweet
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const tweet = await prisma.tweet.findUnique({
-    where: { id: Number(id) },
-    include: { user: true },
-  });
-  if (!tweet) return res.status(404).json({ error: "tweet not found" });
+  try {
+    const tweet = await prisma.tweet.findUnique({
+      where: { id: Number(id) },
+      include: { user: true },
+    });
+    return res.json(tweet);
+  } catch (e) {
+    return res.status(404).json({ error: "tweet not found" });
+  }
   // setTimeout(() => res.json(tweet), 2000);
   // console.log("fetching the tweet:" + id);
-  res.json(tweet);
 });
 // update the tweet
 router.put("/:id", async (req, res) => {

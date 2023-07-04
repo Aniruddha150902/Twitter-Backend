@@ -27,7 +27,7 @@ const authenticationLayer = async (
     });
     if (!dbToken || !dbToken.valid || dbToken.expired < new Date())
       return res.status(400).json({ error: "Authenticaton Token Expired!" });
-    req.user = dbToken?.user;
+    req.body = dbToken?.user;
   } catch (e) {
     console.error(e);
     return res.sendStatus(400);
