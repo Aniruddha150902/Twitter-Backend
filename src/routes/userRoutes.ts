@@ -51,8 +51,8 @@ router.get("/:id", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const user = req.body;
-  // console.log(user);
+  //@ts-ignore
+  const user = req.user;
   return res.json(user);
 });
 
@@ -71,9 +71,11 @@ router.put("/:id", async (req, res) => {
         bio,
       },
     });
-    res.json(result);
+    // console.log(res);
+    return res.json(result);
   } catch (e) {
-    res.status(400).json({ error: "could not update the user" });
+    // console.log(res);
+    return res.status(400).json({ error: "could not update the user" });
   }
 });
 // delete user

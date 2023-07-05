@@ -20,7 +20,7 @@ function generateApiToken(tokenId: number): string {
 }
 // create user
 router.post("/create", async (req, res) => {
-  const { email, name, username, bio } = req.body;
+  const { email, name, username, bio, image } = req.body;
   try {
     const result = await prisma.user.create({
       data: {
@@ -28,6 +28,7 @@ router.post("/create", async (req, res) => {
         name,
         username,
         bio,
+        image,
       },
     });
     res.json(result);

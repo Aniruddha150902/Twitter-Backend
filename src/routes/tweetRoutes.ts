@@ -7,6 +7,7 @@ router.post("/", async (req, res) => {
   const { content, image } = req.body;
   //@ts-ignore
   const user = req.user;
+  console.log(user);
   try {
     const result = await prisma.tweet.create({
       data: {
@@ -18,9 +19,10 @@ router.post("/", async (req, res) => {
         user: true,
       },
     });
-    res.json(result);
+    // console.log(res.json);
+    return res.status(200).json(result);
   } catch (e) {
-    res.status(400).json({ error: "No user with the given id" });
+    return res.status(400).json({ error: "Error Posting the Tweet" });
   }
 });
 // get list of tweets
@@ -37,7 +39,7 @@ router.get("/", async (req, res) => {
       },
     },
   });
-  res.json(allTweets);
+  return res.json(allTweets);
 });
 // get a tweet
 router.get("/:id", async (req, res) => {
